@@ -124,7 +124,7 @@
 	if(istype(affected_atom, /obj/vehicle/multitile))
 		var/obj/vehicle/multitile/multitile_vehicle = affected_atom
 		multitile_vehicle.take_damage_type(20 / acid.acid_delay, "acid", src)
-		visible_message(SPAN_XENOWARNING("[src] vomits globs of vile stuff at [multitile_vehicle]. It sizzles under the bubbling mess of acid!"), \
+		visible_message(SPAN_XENOWARNING("[src] vomits globs of vile stuff at [multitile_vehicle]. It sizzles under the bubbling mess of acid!"),
 			SPAN_XENOWARNING("We vomit globs of vile stuff at [multitile_vehicle]. It sizzles under the bubbling mess of acid!"), null, 5)
 		playsound(loc, "sound/bullets/acid_impact1.ogg", 25)
 		QDEL_IN(acid, 20)
@@ -133,7 +133,7 @@
 	acid.add_hiddenprint(src)
 	acid.name += " ([affected_atom])"
 
-	visible_message(SPAN_XENOWARNING("[src] vomits globs of vile stuff all over [affected_atom]. It begins to sizzle and melt under the bubbling mess of acid!"), \
+	visible_message(SPAN_XENOWARNING("[src] vomits globs of vile stuff all over [affected_atom]. It begins to sizzle and melt under the bubbling mess of acid!"),
 	SPAN_XENOWARNING("We vomit globs of vile stuff all over [affected_atom]. It begins to sizzle and melt under the bubbling mess of acid!"), null, 5)
 	playsound(loc, "sound/bullets/acid_impact1.ogg", 25)
 
@@ -171,7 +171,7 @@
 		to_chat(xeno, SPAN_XENOWARNING("Not enough acid built up for an explosion."))
 		return
 
-	notify_ghosts(header = "For the Hive!", message = "[xeno] is going to explode for the Hive!", source = xeno, action = NOTIFY_ORBIT)
+	notify_ghosts(header = "За улей!", message = "[xeno] is going to explode for the Hive!", source = xeno, action = NOTIFY_ORBIT)
 
 	to_chat(xeno, SPAN_XENOWARNING("Our stomach starts turning and twisting, getting ready to compress the built up acid."))
 	xeno.color = "#22FF22"
@@ -183,7 +183,7 @@
 	behavior_delegate.caboom_last_proc = 0
 	xeno.set_effect(behavior_delegate.caboom_timer*2, SUPERSLOW)
 
-	xeno.say(";FOR THE HIVE!!!")
+	xeno.say(";ЗА УЛЕЙ!!!")
 	return ..()
 
 /datum/action/xeno_action/activable/acider_for_the_hive/proc/cancel_ability()

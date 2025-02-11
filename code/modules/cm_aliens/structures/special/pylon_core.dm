@@ -76,8 +76,8 @@
 	for(var/mob/living/carbon/xenomorph/lesser_drone/lesser in linked_hive.totalXenos)
 		lesser_count++
 
-	. += "Currently holding [SPAN_NOTICE("[floor(lesser_drone_spawns)]")]/[SPAN_NOTICE("[lesser_drone_spawn_limit]")] lesser drones."
-	. += "There are currently [SPAN_NOTICE("[lesser_count]")] lesser drones in the hive. The hive can support a total of [SPAN_NOTICE("[linked_hive.lesser_drone_limit]")] lesser drones at present."
+	. += "Содержит внутри [SPAN_NOTICE("[floor(lesser_drone_spawns)]")]/[SPAN_NOTICE("[lesser_drone_spawn_limit]")] трутней."
+	. += "В улье сейчас активны [SPAN_NOTICE("[lesser_count]")] трутней. Улей может содержать единовременно [SPAN_NOTICE("[linked_hive.lesser_drone_limit]")] трутней."
 
 /obj/effect/alien/resin/special/pylon/attack_ghost(mob/dead/observer/user)
 	. = ..()
@@ -132,7 +132,7 @@
 	if(!linked_hive.can_spawn_as_lesser_drone(xeno_candidate, src))
 		return FALSE
 
-	if(tgui_alert(xeno_candidate, "Are you sure you want to become a lesser drone?", "Confirmation", list("Yes", "No")) != "Yes")
+	if(tgui_alert(xeno_candidate, "Вы уверены, что хотите стать трутнем?", "Подтверждение", list("Да", "Нет")) != "Да")
 		return FALSE
 
 	if(!linked_hive.can_spawn_as_lesser_drone(xeno_candidate, src))
@@ -141,7 +141,7 @@
 	var/mob/living/carbon/xenomorph/lesser_drone/new_drone = new(loc, null, linked_hive.hivenumber)
 	xeno_candidate.mind.transfer_to(new_drone, TRUE)
 	lesser_drone_spawns -= 1
-	new_drone.visible_message(SPAN_XENODANGER("A lesser drone emerges out of [src]!"), SPAN_XENODANGER("You emerge out of [src] and awaken from your slumber. For the Hive!"))
+	new_drone.visible_message(SPAN_XENODANGER("Трутень вылезает из [declent_ru(GENITIVE)]!"), SPAN_XENODANGER("Вы вылезаете из [declent_ru(GENITIVE)] и просыпаетесь из своей спячки. За улей!"))
 	playsound(new_drone, 'sound/effects/xeno_newlarva.ogg', 25, TRUE)
 	new_drone.generate_name()
 
@@ -164,7 +164,7 @@
 		if(hijack_delete)
 			return ..()
 
-		marine_announcement("ALERT.\n\nEnergy build up around communication relay at [get_area_name(src)] halted.", "[MAIN_AI_SYSTEM] Biological Scanner")
+		marine_announcement("ВНИМАНИЕ.\n\nНакопление энергии вокруг коммуникационного реле в [get_area_name(src)] остановлено.", "[MAIN_AI_SYSTEM]: Биологический сканер")
 
 		for(var/hivenumber in GLOB.hive_datum)
 			var/datum/hive_status/checked_hive = GLOB.hive_datum[hivenumber]
@@ -180,7 +180,7 @@
 
 /// Checks if all comms towers are connected and then starts end game content on all pylons if they are
 /obj/effect/alien/resin/special/pylon/endgame/proc/comms_relay_connection()
-	marine_announcement("ALERT.\n\nIrregular build up of energy around communication relays at [get_area_name(src)], biological hazard detected.\n\nDANGER: Hazard is strengthening xenomorphs, advise urgent termination of hazard by ground forces.", "[MAIN_AI_SYSTEM] Biological Scanner")
+	marine_announcement("ВНИМАНИЕ.\n\nНерегулярное накопление энергии вокруг коммуникационных реле в [get_area_name(src)], обнаружена биологическая угроза.\n\nТРЕВОГА: Возникает опасность усиления ксеноморфов, рекомендация: срочно ликвидировать угрозу наземными силами.", "[MAIN_AI_SYSTEM]: Биологический сканер")
 
 	for(var/hivenumber in GLOB.hive_datum)
 		var/datum/hive_status/checked_hive = GLOB.hive_datum[hivenumber]

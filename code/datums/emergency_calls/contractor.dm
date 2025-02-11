@@ -12,8 +12,8 @@
 
 /datum/emergency_call/contractors/New()
 	..()
-	arrival_message = "[MAIN_SHIP_NAME], this is USCSS Inheritor with Vanguard's Arrow Incorporated, Primary Operations; we are responding to your distress call and boarding in accordance with the Military Aid Act of 2177, authenticication code Lima-18153. "
-	objectives = "Ensure the survival of the [MAIN_SHIP_NAME], eliminate any hostiles, and assist the crew in any way possible."
+	arrival_message = "[MAIN_SHIP_NAME], это ККС \"Наследник\" с корпорацией \"Стрела Авангарда\", Основные Операции; мы получили ваш сигнал бедствия и выдвигаемся к вам в соответствии с Законом о военной помощи от 2177 года, код аутентификации Лима-18153."
+	objectives = "Обеспечьте безопасность [MAIN_SHIP_NAME], ликвидируйте врагов и окажите любую необходимую помощь экипажу."
 
 
 /datum/emergency_call/contractors/create_member(datum/mind/M, turf/override_spawn_loc)
@@ -71,7 +71,7 @@
 	to_chat(M, SPAN_BOLD("Under the directive of the VAI executive board, you have been assist in riot control, military aid, and to assist USCMC forces wherever possible."))
 	to_chat(M, SPAN_BOLD("The USCSS Inheritor is staffed with crew of roughly three hundred military contractors, and fifty support personnel."))
 	to_chat(M, SPAN_BOLD("Assist the USCMC Force of the [MAIN_SHIP_NAME] however you can."))
-	to_chat(M, SPAN_BOLD("As a side-objective, VAI has been hired by an unknown benefactor to engage in corporate espionage and sabotage against Weyland-Yutani, avoid direct conflict; you aren't VAISO; but attempt to recover Wey-Yu secrets and plans if possible."))
+	to_chat(M, SPAN_BOLD("As a side-objective, VAI has been hired by an unknown benefactor to engage in corporate espionage and sabotage against Weyland-Yutani, do not get into a fight, but attempt to recover Wey-Yu secrets and plans if possible."))
 
 
 /datum/emergency_call/contractors/platoon
@@ -85,7 +85,7 @@
 	max_synths = 2
 
 /datum/emergency_call/contractors/covert
-	name = "Military Contractors (Covert) (Hostile to WY)"
+	name = "Military Contractors (Covert) (Friendly)"
 	mob_max = 7
 	probability = 20
 	max_medics = 1
@@ -96,13 +96,13 @@
 
 /datum/emergency_call/contractors/covert/New()
 	..()
-	arrival_message = "[MAIN_SHIP_NAME], this is USCSS Samburan, with Vanguard's Arrow Incorporated, Special Operations; we are boarding in accordance with the 2177 Military Aid Act; authorisation code X-Ray 19601."
-	objectives = "Assist USCMC forces in whatever way is possible, sabotage Weyland-Yutani efforts."
+	arrival_message = "[MAIN_SHIP_NAME], это ККС \"Самбуран\" с корпорацией \"Стрела Авангарда\", Специальные Операции; мы получили ваш сигнал бедствия и выдвигаемся к вам в соответствии с Законом о военной помощи от 2177 года, код аутентификации Икс-Рей 19601."
+	objectives = "Помогайте силам КМП всеми возможными способами, саботируйте деятельность Вейланд-Ютани."
 
 /datum/emergency_call/contractors/covert/proc/check_objective_info()
 	if(objective_info)
-		objectives = "Assist USCMC forces in whatever way is possible."
-	objectives += "Sabotage Weyland-Yutani efforts."
+		objectives = "Помогайте силам КМП всеми возможными способами."
+	objectives += "Саботируйте деятельность Вейланд-Ютани."
 	checked_objective = TRUE
 
 /datum/emergency_call/contractors/covert/create_member(datum/mind/M, turf/override_spawn_loc)

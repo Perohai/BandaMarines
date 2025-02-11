@@ -768,7 +768,7 @@ SUBSYSTEM_DEF(minimaps)
 		faction = allowed_flags == MINIMAP_FLAG_XENO ? XENO_HIVE_NORMAL : FACTION_MARINE
 
 	if(is_xeno && xeno.hive.see_humans_on_tacmap && targeted_ztrait != ZTRAIT_MARINE_MAIN_SHIP)
-		allowed_flags |= MINIMAP_FLAG_USCM|MINIMAP_FLAG_PMC|MINIMAP_FLAG_UPP|MINIMAP_FLAG_CLF
+		allowed_flags |= MINIMAP_FLAG_USCM|MINIMAP_FLAG_WY|MINIMAP_FLAG_UPP|MINIMAP_FLAG_CLF
 		targeted_ztrait = ZTRAIT_MARINE_MAIN_SHIP
 		map_holder = null
 
@@ -975,7 +975,7 @@ SUBSYSTEM_DEF(minimaps)
 				GLOB.uscm_flat_tacmap_data += new_current_map
 				COOLDOWN_START(GLOB, uscm_canvas_cooldown, CANVAS_COOLDOWN_TIME)
 				for(var/datum/squad/current_squad in GLOB.RoleAuthority.squads)
-					current_squad.send_maptext("Tactical map update in progress...", "Tactical Map:")
+					current_squad.send_maptext("Идет обновление тактической карты...", "Тактическая карта:")
 				var/mob/living/carbon/human/human_leader = user
 				human_leader.visible_message(SPAN_BOLDNOTICE("Tactical map update in progress..."))
 				playsound_client(human_leader.client, "sound/effects/data-transmission.ogg")
@@ -1080,7 +1080,7 @@ SUBSYSTEM_DEF(minimaps)
 		if(FACTION_CLF)
 			return MINIMAP_FLAG_CLF
 		if(FACTION_PMC)
-			return MINIMAP_FLAG_PMC
+			return MINIMAP_FLAG_WY
 		if(FACTION_YAUTJA)
 			return MINIMAP_FLAG_YAUTJA
 		if(XENO_HIVE_CORRUPTED)

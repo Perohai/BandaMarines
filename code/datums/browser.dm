@@ -68,7 +68,6 @@
 
 /datum/browser/proc/get_header()
 	head_content += "<link rel='stylesheet' type='text/css' href='[common_asset.get_url_mappings()[stylesheet]]'>"
-	head_content += "<link rel='stylesheet' type='text/css' href='[other_asset.get_url_mappings()["search.js"]]'>"
 	head_content += "<link rel='stylesheet' type='text/css' href='[other_asset.get_url_mappings()["loading.gif"]]'>"
 
 	for (var/file in stylesheets)
@@ -77,18 +76,20 @@
 
 	for (var/file in scripts)
 		head_content += "<script type='text/javascript' src='[SSassets.transport.get_asset_url(file)]'></script>"
+	head_content += "<script type='text/javascript' src='[other_asset.get_url_mappings()["search.js"]]'></script>"
 
 	var/title_attributes = "class='uiTitle'"
 	if (title_image)
 		title_attributes = "class='uiTitle icon' style='background-image: url([title_image]);'"
 
+	// SS220 EDIT - RU fix
 	return {"<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<META content="text/html; charset=UTF-8" http-equiv=Content-Type> // SS220 EDIT - RU fix
+	<META content="text/html; charset=UTF-8" http-equiv=Content-Type>
 	<head>
 		[head_content]
 	</head>
-	<body scroll=auto>
+	<body scroll=auto onload='selectFilterField()'>
 		<div class='uiWrapper'>
 			[title ? "<div class='uiTitleWrapper'><div [title_attributes]><tt>[title]</tt></div><div class='uiTitleButtons'>[title_buttons]</div></div>" : ""]
 			<div class='uiContent'>

@@ -56,7 +56,7 @@
 	vis_contents += wound_icon_holder
 
 /mob/living/simple_animal/hostile/alien/proc/generate_name()
-	change_real_name(src, "[caste_name] (BD-[rand(1, 999)])")
+	change_real_name(src, "[declent_ru_initial(caste_name, NOMINATIVE, caste_name)] (BD-[rand(1, 999)])") // BANDASTATION EDIT
 
 /mob/living/simple_animal/hostile/alien/proc/handle_icon()
 	icon_state = "Normal [caste_name] Running"
@@ -176,19 +176,3 @@
 
 	pixel_x = -12
 	old_x = -12
-
-// Still using old projectile code - commenting this out for now
-// /mob/living/simple_animal/hostile/alien/sentinel
-// name = "alien sentinel"
-// icon_state = "Sentinel Running"
-// icon_living = "Sentinel Running"
-// icon_dead = "Sentinel Dead"
-// health = 120
-// melee_damage_lower = 15
-// melee_damage_upper = 15
-// ranged = 1
-// projectiletype = /obj/projectile/neurotox
-// projectilesound = 'sound/weapons/pierce.ogg'
-/obj/projectile/neurotox
-	damage = 30
-	icon_state = "toxin"

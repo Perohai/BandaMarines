@@ -13,7 +13,6 @@
 
 // Spec verb macros
 /mob/living/carbon/human/verb/spec_activation_one()
-	set category = "Specialist"
 	set name = "Specialist Activation One"
 	set hidden = TRUE
 
@@ -25,7 +24,6 @@
 			SA.handle_spec_macro()
 
 /mob/living/carbon/human/verb/spec_activation_two()
-	set category = "Specialist"
 	set name = "Specialist Activation Two"
 	set hidden = TRUE
 
@@ -99,7 +97,7 @@
 	ADD_TRAIT(redeemer, TRAIT_SPEC(trait_to_give), TRAIT_SOURCE_INHERENT)
 	var/obj/item/card/id/idcard = redeemer.get_idcard()
 	if(idcard)
-		idcard.set_assignment((redeemer.assigned_squad ? (redeemer.assigned_squad.name + " ") : "") + JOB_SQUAD_SPECIALIST + " ([role_name])")
+		idcard.set_assignment(JOB_SQUAD_SPECIALIST_RU + " " + (redeemer.assigned_squad ? (redeemer.assigned_squad.get_name_ru() + " ") : "") + " ([role_name_ru])")	// SS220 EDIT TRANSLATE
 		GLOB.data_core.manifest_modify(redeemer.real_name, WEAKREF(redeemer), idcard.assignment)
 	return TRUE
 

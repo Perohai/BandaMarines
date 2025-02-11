@@ -64,7 +64,7 @@
 	..()
 	if(istype(AM,/mob/living/carbon/xenomorph))
 		return
-	visible_message(SPAN_DANGER("\The [src] was hit by \the [AM]."), \
+	visible_message(SPAN_DANGER("\The [src] was hit by \the [AM]."),
 	SPAN_DANGER("You hit \the [src]."))
 	var/tforce = 0
 	if(ismob(AM))
@@ -86,7 +86,7 @@
 		return XENO_NO_DELAY_ACTION
 	else
 		M.animation_attack_on(src)
-		M.visible_message(SPAN_XENONOTICE("\The [M] claws \the [src]!"), \
+		M.visible_message(SPAN_XENONOTICE("\The [M] claws \the [src]!"),
 		SPAN_XENONOTICE("We claw \the [src]."))
 		if(istype(src, /obj/effect/alien/resin/sticky))
 			playsound(loc, "alien_resin_move", 25)
@@ -103,7 +103,7 @@
 	return XENO_ATTACK_ACTION
 
 /obj/effect/alien/resin/attack_animal(mob/living/M as mob)
-	M.visible_message(SPAN_DANGER("[M] tears \the [src]!"), \
+	M.visible_message(SPAN_DANGER("[M] tears \the [src]!"),
 	SPAN_DANGER("You tear \the [name]."))
 	if(istype(src, /obj/effect/alien/resin/sticky))
 		playsound(loc, "alien_resin_move", 25)
@@ -852,7 +852,7 @@
 /obj/effect/alien/resin/resin_pillar/attack_alien(mob/living/carbon/xenomorph/M)
 	if(!brittle)
 		M.animation_attack_on(src)
-		M.visible_message(SPAN_XENONOTICE("\The [M] claws \the [src], but the slash bounces off!"), \
+		M.visible_message(SPAN_XENONOTICE("\The [M] claws \the [src], but the slash bounces off!"),
 		SPAN_XENONOTICE("You claw \the [src], but the slash bounces off!"))
 		return XENO_ATTACK_ACTION
 
@@ -861,7 +861,7 @@
 /obj/effect/alien/resin/resin_pillar/attackby(obj/item/W, mob/living/user)
 	user.animation_attack_on(src)
 	if(!brittle)
-		user.visible_message(SPAN_DANGER("[user] hits \the [src], but \the [W] bounces off!"), \
+		user.visible_message(SPAN_DANGER("[user] hits \the [src], but \the [W] bounces off!"),
 			SPAN_DANGER("You hit \the [name], but \the [W] bounces off!"))
 		return
 
@@ -893,7 +893,7 @@
 
 /obj/effect/alien/resin/king_cocoon/Destroy()
 	if(!hatched)
-		marine_announcement("ALERT.\n\nUNUSUAL ENERGY BUILDUP IN [uppertext(get_area_name(loc))] HAS BEEN STOPPED.", "[MAIN_AI_SYSTEM] Biological Scanner", 'sound/misc/notice1.ogg')
+		marine_announcement("ВНИМАНИЕ.\n\nНЕОБЫЧНОЕ НАКОПЛЕНИЕ ЭНЕРГИИ В [uppertext(get_area_name(loc))] БЫЛО ОСТАНОВЛЕНО.", "[MAIN_AI_SYSTEM]: Биологический сканер", 'sound/misc/notice1.ogg')
 		var/datum/hive_status/hive
 		for(var/cur_hive_num in GLOB.hive_datum)
 			hive = GLOB.hive_datum[cur_hive_num]
@@ -933,7 +933,7 @@
 	timer = addtimer(CALLBACK(src, PROC_REF(start_growing)), 10 SECONDS, TIMER_UNIQUE|TIMER_STOPPABLE|TIMER_DELETE_ME)
 	addtimer(CALLBACK(src, PROC_REF(check_pylons)), 10 SECONDS, TIMER_UNIQUE|TIMER_STOPPABLE|TIMER_DELETE_ME|TIMER_LOOP)
 
-	marine_announcement("ALERT.\n\nUNUSUAL ENERGY BUILDUP DETECTED IN [uppertext(get_area_name(loc))].\n\nESTIMATED TIME UNTIL COMPLETION - 10 MINUTES.", "[MAIN_AI_SYSTEM] Biological Scanner", 'sound/misc/notice1.ogg')
+	marine_announcement("ВНИМАНИЕ.\n\nБЫЛО ОБНАРУЖЕНО НЕОБЫЧНОЕ НАКОПЛЕНИЕ ЭНЕРГИИ В [uppertext(get_area_name(loc))].\n\nРАСЧЕТНОЕ ВРЕМЯ ДО ЗАВЕРШЕНИЯ - 10 МИНУТ.", "[MAIN_AI_SYSTEM]: Биологический сканер", 'sound/misc/notice1.ogg')
 	var/datum/hive_status/hive
 	for(var/cur_hive_num in GLOB.hive_datum)
 		hive = GLOB.hive_datum[cur_hive_num]
@@ -983,7 +983,7 @@
 /obj/effect/alien/resin/king_cocoon/proc/announce_halfway()
 	timer = addtimer(CALLBACK(src, PROC_REF(start_vote)), 4 MINUTES, TIMER_UNIQUE|TIMER_STOPPABLE|TIMER_DELETE_ME)
 
-	marine_announcement("ALERT.\n\nUNUSUAL ENERGY BUILDUP DETECTED IN [uppertext(get_area_name(loc))].\n\nESTIMATED TIME UNTIL COMPLETION - 5 MINUTES.", "[MAIN_AI_SYSTEM] Biological Scanner", 'sound/misc/notice1.ogg')
+	marine_announcement("ВНИМАНИЕ.\n\nБЫЛО ОБНАРУЖЕНО НЕОБЫЧНОЕ НАКОПЛЕНИЕ ЭНЕРГИИ В [uppertext(get_area_name(loc))].\n\nРАСЧЕТНОЕ ВРЕМЯ ДО ЗАВЕРШЕНИЯ - 5 МИНУТ.", "[MAIN_AI_SYSTEM]: Биологический сканер", 'sound/misc/notice1.ogg')
 	var/datum/hive_status/hive
 	for(var/cur_hive_num in GLOB.hive_datum)
 		hive = GLOB.hive_datum[cur_hive_num]
@@ -1155,7 +1155,7 @@
 		animate_hatch_king()
 		return
 
-	marine_announcement("ALERT.\n\nUNUSUAL ENERGY BUILDUP DETECTED IN [get_area_name(loc)].\n\nESTIMATED TIME UNTIL COMPLETION - ONE MINUTE.", "[MAIN_AI_SYSTEM] Biological Scanner", 'sound/misc/notice1.ogg')
+	marine_announcement("ВНИМАНИЕ.\n\nБЫЛО ОБНАРУЖЕНО НЕОБЫЧНОЕ НАКОПЛЕНИЕ ЭНЕРГИИ В [get_area_name(loc)].\n\nРАСЧЕТНОЕ ВРЕМЯ ДО ЗАВЕРШЕНИЯ - ОДНА МИНУТА.", "[MAIN_AI_SYSTEM]: Биологический сканер", 'sound/misc/notice1.ogg')
 	var/datum/hive_status/hive
 	for(var/cur_hive_num in GLOB.hive_datum)
 		hive = GLOB.hive_datum[cur_hive_num]
@@ -1173,7 +1173,7 @@
 	flick("hatching", src)
 	addtimer(CALLBACK(src, PROC_REF(hatch_king)), 2 SECONDS, TIMER_UNIQUE|TIMER_STOPPABLE)
 
-	marine_announcement("ALERT.\n\nEXTREME ENERGY INFLUX DETECTED IN [get_area_name(loc)].\n\nCAUTION IS ADVISED.", "[MAIN_AI_SYSTEM] Biological Scanner", 'sound/misc/notice1.ogg')
+	marine_announcement("ВНИМАНИЕ.\n\nЗАФИКСИРОВАН ЭКСТРЕМАЛЬНЫЙ ПОТОК ЭНЕРГИИ В [get_area_name(loc)].\n\nБУДЬТЕ БДИТЕЛЬНЫ.", "[MAIN_AI_SYSTEM]: Биологический сканер", 'sound/misc/notice1.ogg')
 	var/datum/hive_status/hive
 	for(var/cur_hive_num in GLOB.hive_datum)
 		hive = GLOB.hive_datum[cur_hive_num]

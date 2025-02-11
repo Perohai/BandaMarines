@@ -71,7 +71,8 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	var/toggles_flashing = TOGGLES_FLASHING_DEFAULT
 	var/toggles_ert = TOGGLES_ERT_DEFAULT
 	var/toggles_ert_pred = TOGGLES_ERT_GROUNDS
-	var/list/volume_preferences = list(1, 0.5, 1, 0.6) // Game, music, admin midis, lobby music (this is also set in sanitize_volume_preferences() call)
+	var/list/volume_preferences = list(1, 0.5, 1, 0.6, //Game, music, admin midis, lobby music
+	1, 0.5) // SS220 TTS EDIT
 	var/chat_display_preferences = CHAT_TYPE_ALL
 	var/item_animation_pref_level = SHOW_ITEM_ANIMATIONS_ALL
 	var/pain_overlay_pref_level = PAIN_OVERLAY_BLURRY
@@ -115,6 +116,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	var/predator_flavor_text = ""
 	//CO-specific preferences
 	var/commander_sidearm = "Mateba"
+	var/co_career_path = "Infantry"
 	var/affiliation = "Unaligned"
 	//SEA specific preferences
 
@@ -184,7 +186,15 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 	var/language = "None" //Secondary language
 	var/list/gear //Custom/fluff item loadout.
 	var/preferred_squad = "None"
-
+	var/night_vision_preference = "Green"
+	var/list/nv_color_list = list(
+						"Green" = NV_COLOR_GREEN,
+						"White" = NV_COLOR_WHITE,
+						"Yellow" = NV_COLOR_YELLOW,
+						"Orange" = NV_COLOR_ORANGE,
+						"Red" = NV_COLOR_RED,
+						"Blue" = NV_COLOR_BLUE
+					)
 		//Some faction information.
 	var/origin = ORIGIN_USCM
 	var/faction = "None" //Antag faction/general associated faction.
@@ -415,6 +425,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 
 			dat += "<b>Show Job Gear:</b> <a href='byond://?_src_=prefs;preference=toggle_job_gear'><b>[show_job_gear ? "True" : "False"]</b></a><br>"
 			dat += "<b>Background:</b> <a href='byond://?_src_=prefs;preference=cycle_bg'><b>Cycle Background</b></a><br><br>"
+			dat += "<b>Night Vision Color:</b> <a href='byond://?_src_=prefs;preference=prefnvg;task=input'><b>[night_vision_preference]</b></a><br>"
 
 			dat += "<b>Custom Loadout:</b> "
 			var/total_cost = 0
@@ -451,6 +462,14 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 				dat += "<b>You are banned from using character records.</b><br>"
 			else
 				dat += "<b>Records:</b> <a href=\"byond://?src=\ref[user];preference=records;record=1\"><b>Character Records</b></a><br>"
+
+			// SS220 ADDITION START - TTS220
+			if((SStts220.is_enabled))
+				dat += {"
+				<h2>Text-to-Speech</h2>
+				<b>Выбор голоса:</b> <a href='byond://?_src_=prefs;preference=tts_seed;task=open'>Эксплорер TTS голосов</a><br>
+				"}
+			// SS220 ADDITION END
 
 			dat += "<b>Flavor Text:</b> <a href='byond://?src=\ref[user];preference=flavor_text;task=open'><b>[TextPreview(flavor_texts["general"], 15)]</b></a><br>"
 			dat += "</div>"
@@ -513,6 +532,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 				dat += "<b>Commander Whitelist Status:</b> <a href='byond://?_src_=prefs;preference=commander_status;task=input'><b>[commander_status]</b></a><br>"
 				dat += "<b>Commander Sidearm:</b> <a href='byond://?_src_=prefs;preference=co_sidearm;task=input'><b>[commander_sidearm]</b></a><br>"
 				dat += "<b>Commander Affiliation:</b> <a href='byond://?_src_=prefs;preference=co_affiliation;task=input'><b>[affiliation]</b></a><br>"
+				dat += "<b>Commander Career Path:</b> <a href='byond://?_src_=prefs;preference=co_career_path;task=input'><b>[co_career_path]</b></a><br>"
 				dat += "</div>"
 			else
 				dat += "<b>You do not have the whitelist for this role.</b>"
@@ -671,7 +691,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
  * * width - Screen' width.
  * * height - Screen's height.
  */
-/datum/preferences/proc/SetChoices(mob/user, limit = 22, list/splitJobs = list(JOB_CHIEF_REQUISITION, JOB_WO_CMO), width = 950, height = 750)
+/datum/preferences/proc/SetChoices(mob/user, limit = 21, list/splitJobs = list(JOB_CHIEF_REQUISITION, JOB_WO_CMO), width = 950, height = 750)
 	if(!GLOB.RoleAuthority)
 		return
 
@@ -791,7 +811,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
  * * width - Screen' width.
  * * height - Screen's height.
  */
-/datum/preferences/proc/set_job_slots(mob/user, limit = 22, list/splitJobs = list(JOB_CHIEF_REQUISITION, JOB_WO_CMO), width = 950, height = 750)
+/datum/preferences/proc/set_job_slots(mob/user, limit = 21, list/splitJobs = list(JOB_CHIEF_REQUISITION, JOB_WO_CMO), width = 950, height = 750)
 	if(!GLOB.RoleAuthority)
 		return
 
@@ -1115,6 +1135,15 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 		if("cycle_bg")
 			bg_state = next_in_list(bg_state, GLOB.bgstate_options)
 
+
+		// SS220 ADDITION START - TTS220
+		if("tts_seed")
+			switch(href_list["task"])
+				if("open")
+					var/datum/tts_seeds_explorer/explorer = new
+					explorer.tgui_interact(user)
+		// SS220 ADDITION END
+
 	switch (href_list["task"])
 		if ("random")
 			switch (href_list["preference"])
@@ -1179,13 +1208,13 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 							to_chat(user, "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>")
 
 				if("xeno_vision_level_pref")
-					var/static/list/vision_level_choices = list(XENO_VISION_LEVEL_NO_NVG, XENO_VISION_LEVEL_MID_NVG, XENO_VISION_LEVEL_FULL_NVG)
+					var/static/list/vision_level_choices = list(XENO_VISION_LEVEL_NO_NVG, XENO_VISION_LEVEL_MID_NVG, XENO_VISION_LEVEL_HIGH_NVG,  XENO_VISION_LEVEL_FULL_NVG)
 					var/choice = tgui_input_list(user, "Choose your default xeno vision level", "Vision level", vision_level_choices, theme="hive_status")
 					if(!choice)
 						return
 					xeno_vision_level_pref = choice
 				if("ghost_vision_pref")
-					var/static/list/vision_level_choices = list(GHOST_VISION_LEVEL_NO_NVG, GHOST_VISION_LEVEL_MID_NVG, GHOST_VISION_LEVEL_FULL_NVG)
+					var/static/list/vision_level_choices = list(GHOST_VISION_LEVEL_NO_NVG, GHOST_VISION_LEVEL_MID_NVG, GHOST_VISION_LEVEL_HIGH_NVG, GHOST_VISION_LEVEL_FULL_NVG)
 					var/choice = tgui_input_list(user, "Choose your default ghost vision level", "Vision level", vision_level_choices)
 					if(!choice)
 						return
@@ -1335,6 +1364,16 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 						return
 					affiliation = new_co_affiliation
 
+				if("co_career_path")
+					var/list/options = list("Infantry", "Engineering", "Medical", "Intel", "Logistics", "Aviation", "Tanker")
+
+					var/new_career_path = tgui_input_list(user, "Choose your new Career Path.", "Career Path", options)
+
+					if(!new_career_path)
+						return
+
+					co_career_path = new_career_path
+
 
 				if("yautja_status")
 					var/list/options = list("Normal" = WHITELIST_NORMAL)
@@ -1402,7 +1441,7 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 					var/new_xeno_prefix = input(user, "Choose your xenomorph prefix. One or two letters capitalized. Put empty text if you want to default it to 'XX'", "Xenomorph Prefix") as text|null
 					new_xeno_prefix = uppertext(new_xeno_prefix)
 
-					var/prefix_length = length(new_xeno_prefix)
+					var/prefix_length = length_char(new_xeno_prefix) //SS220 EDIT CHANGE - Cyrillic Fixes
 
 					if(prefix_length>3)
 						to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("Invalid Xeno Prefix. Your Prefix can only be up to 3 letters long.")))
@@ -1417,14 +1456,14 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 							to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("You can't use three letter prefix with any postfix.")))
 							return
 
-					if(length(new_xeno_prefix)==0)
+					if(length_char(new_xeno_prefix)==0) //SS220 EDIT CHANGE - Cyrillic Fixes
 						xeno_prefix = "XX"
 						owner.load_xeno_name()
 					else
 						var/all_ok = TRUE
-						for(var/i=1, i<=length(new_xeno_prefix), i++)
-							var/ascii_char = text2ascii(new_xeno_prefix,i)
-							if(ascii_char < 65 || ascii_char > 90)
+						for(var/i=1, i<=length_char(new_xeno_prefix), i++) //SS220 EDIT CHANGE - Cyrillic Fixes
+							var/ascii_char = text2ascii_char(new_xeno_prefix,i) //SS220 EDIT CHANGE - Cyrillic Fixes
+							if(!((ascii_char >= 65 && ascii_char <= 90) || (ascii_char >= 1040 && ascii_char <= 1071 && ascii_char != 1025))) //SS220 EDIT CHANGE - Cyrillic Fixes
 								all_ok = FALSE //everything else - won't
 						if(all_ok)
 							xeno_prefix = new_xeno_prefix
@@ -1442,28 +1481,28 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 						to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("You need to play [time_left_until(24 HOURS, playtime, 1 HOURS)] more hours to unlock xeno postfix.")))
 						return
 
-					if(length(xeno_prefix)==3)
+					if(length_char(xeno_prefix)==3) //SS220 EDIT CHANGE - Cyrillic Fixes
 						to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("You can't use three letter prefix with any postfix.")))
 						return
 
 					var/new_xeno_postfix = input(user, "Choose your xenomorph postfix. One capital letter with or without a digit at the end. Put empty text if you want to remove postfix", "Xenomorph Postfix") as text|null
 					new_xeno_postfix = uppertext(new_xeno_postfix)
-					if(length(new_xeno_postfix)>2)
+					if(length_char(new_xeno_postfix)>2) //SS220 EDIT CHANGE - Cyrillic Fixes
 						to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("Invalid Xeno Postfix. Your Postfix can only be up to 2 letters long.")))
 						return
-					else if(length(new_xeno_postfix)==0)
+					else if(length_char(new_xeno_postfix)==0) //SS220 EDIT CHANGE - Cyrillic Fixes
 						xeno_postfix = ""
 						owner.load_xeno_name()
 					else
 						var/all_ok = TRUE
 						var/first_char = TRUE
-						for(var/i=1, i<=length(new_xeno_postfix), i++)
-							var/ascii_char = text2ascii(new_xeno_postfix,i)
+						for(var/i=1, i<=length_char(new_xeno_postfix), i++) //SS220 EDIT CHANGE - Cyrillic Fixes
+							var/ascii_char = text2ascii_char(new_xeno_postfix,i)
 							switch(ascii_char)
 								// A  .. Z
-								if(65 to 90) //Uppercase Letters will work on first char
+								if(65 to 90, 1040 to 1071, 1025) //Uppercase Letters will work on first char  //SS220 EDIT CHANGE - Cyrillic Fixes
 
-									if(length(xeno_prefix)!=2)
+									if(length_char(xeno_prefix)!=2) //SS220 EDIT CHANGE - Cyrillic Fixes
 										to_chat(user, SPAN_WARNING(FONT_SIZE_BIG("You can't use three letter prefix with any postfix.")))
 										return
 
@@ -1549,6 +1588,12 @@ GLOBAL_LIST_INIT(bgstate_options, list(
 					var/new_pref_squad = input(user, "Choose your preferred squad.", "Character Preference")  as null|anything in list("Alpha", "Bravo", "Charlie", "Delta", "None")
 					if(new_pref_squad)
 						preferred_squad = new_pref_squad
+
+				if("prefnvg")
+					var/new_nvg_color = tgui_input_list(user, "Choose the color of your night-vision", "Character Preferences", GLOB.nvg_color_list)
+					if(!new_nvg_color)
+						return
+					night_vision_preference = new_nvg_color
 
 				if("prefarmor")
 					var/new_pref_armor = tgui_input_list(user, "Choose your character's default style of armor:", "Character Preferences", GLOB.armor_style_list)

@@ -260,7 +260,7 @@
 				if(!istype(turf, /turf/closed/wall))
 					continue
 				var/turf/closed/wall/wall = turf
-				if(wall.hull)
+				if(wall.turf_flags & TURF_HULL)
 					continue
 			lz_smoke += new /obj/effect/particle_effect/smoke/miasma(turf, null, new_cause_data)
 
@@ -284,7 +284,7 @@
 			shake_camera(mob, steps = 3, strength = 1)
 			announcement_mobs += mob
 
-	announcement_helper("Dropship [marine_dropship.name] dispersing [/obj/effect/particle_effect/smoke/weedkiller::name] due to potential biological infestation.", MAIN_AI_SYSTEM, announcement_mobs, 'sound/effects/rocketpod_fire.ogg')
+	announcement_helper("Корабль [marine_dropship.name] распыляет [/obj/effect/particle_effect/smoke/weedkiller::name] в виду потенциального биологического заражения.", MAIN_AI_SYSTEM, announcement_mobs, 'sound/effects/rocketpod_fire.ogg')
 
 /**
  * Clears any built resin in the areas around the landing zone,
@@ -310,7 +310,7 @@
 				if(!istype(turf, /turf/closed/wall))
 					continue
 				var/turf/closed/wall/wall = turf
-				if(wall.hull)
+				if(wall.turf_flags & TURF_HULL)
 					continue
 			new /obj/effect/particle_effect/smoke/weedkiller(turf, null, cause_data)
 
@@ -404,8 +404,8 @@
 
 						round_status_flags |= ROUNDSTATUS_PODDOORS_OPEN
 
-						var/input = "Security lockdown will be lifting in 30 seconds per automated lockdown protocol."
-						var/name = "Automated Security Authority Announcement"
+						var/input = "Охранная блокировка будет снята через 30 секунд в соответствии с протоколом автоматической блокировки."
+						var/name = "Автоматизированное оповещение охранных систем"
 						marine_announcement(input, name, 'sound/AI/commandreport.ogg')
 						for(var/i in GLOB.living_xeno_list)
 							var/mob/M = i

@@ -52,9 +52,8 @@ GLOBAL_DATUM_INIT(bioscan_data, /datum/bioscan_data, new)
 	for(var/mob/current_mob as anything in GLOB.living_xeno_list)
 		if(current_mob.mob_flags & NOBIOSCAN)
 			continue
-		var/area/A = get_area(current_mob)
-		if(A?.flags_area & AREA_AVOID_BIOSCAN)
-			xenos_on_ship++
+		var/area/area = get_area(current_mob)
+		if(area?.flags_area & AREA_AVOID_BIOSCAN)
 			continue
 		var/atom/where = current_mob
 		if (where.z == 0 && current_mob.loc)
@@ -69,6 +68,9 @@ GLOBAL_DATUM_INIT(bioscan_data, /datum/bioscan_data, new)
 
 	for(var/mob/living/carbon/human/current_human as anything in GLOB.alive_human_list)
 		if(current_human.mob_flags & NOBIOSCAN)
+			continue
+		var/area/area = get_area(current_human)
+		if(area?.flags_area & AREA_AVOID_BIOSCAN)
 			continue
 		var/atom/where = current_human
 		if(isspecieshuman(current_human))
@@ -121,16 +123,16 @@ GLOBAL_DATUM_INIT(bioscan_data, /datum/bioscan_data, new)
 /datum/bioscan_data/proc/ares_bioscan(forced = FALSE, variance = 2)
 	if(!forced && !ares_can_bioscan())
 		message_admins("An ARES Bioscan has failed.")
-		var/name = "[MAIN_AI_SYSTEM] Bioscan Status"
-		var/input = "Bioscan failed. \n\nInvestigation into Bioscan subsystem recommended."
+		var/name = "[MAIN_AI_SYSTEM]: Статус биосканирования"
+		var/input = "Биосканирование не удалось. \n\nРекомендуется провести проверку подсистемы Биосканирования."
 		log_ares_bioscan(name, input, forced)
 		if(ares_can_interface() || forced)
 			marine_announcement(input, name, 'sound/misc/interference.ogg', logging = ARES_LOG_NONE)
 		return
 	//Adjust the randomness there so everyone gets the same thing
 	var/fake_xenos_on_planet = max(0, xenos_on_planet + rand(-variance, variance))
-	var/name = "[MAIN_AI_SYSTEM] Bioscan Status"
-	var/input = "Bioscan complete.\n\nSensors indicate [xenos_on_ship_uncontained ? "[xenos_on_ship_uncontained]" : "no"] unknown lifeform signature[!xenos_on_ship_uncontained || xenos_on_ship_uncontained > 1 ? "s":""] present on the ship[xenos_on_ship_uncontained && xenos_ship_location ? ", including one in [xenos_ship_location]," : ""] and [fake_xenos_on_planet ? "approximately [fake_xenos_on_planet]" : "no"] signature[!fake_xenos_on_planet || fake_xenos_on_planet > 1 ? "s":""] located elsewhere[fake_xenos_on_planet && xenos_planet_location ? ", including one in [xenos_planet_location]":""]."
+	var/name = "[MAIN_AI_SYSTEM]: Статус биосканирования"
+	var/input = "Биосканирование завершено.\n\n[xenos_on_ship_uncontained ? "Зафиксировано присутствие [xenos_on_ship_uncontained]" : "Присутствие"] неизвестных форм жизни на корабле [xenos_on_ship_uncontained ? (xenos_ship_location ? ", включая одного в [xenos_ship_location]" : "") : "не зафиксировано"]. Зафиксировано [fake_xenos_on_planet ? "возможное присутствие [fake_xenos_on_planet]" : "отсутствие"] сигнатур, расположенных где-либо ещё[fake_xenos_on_planet && xenos_planet_location ? ", включая одного в [xenos_planet_location]":""]."
 
 	log_game("BIOSCAN: ARES bioscan completed. [input]")
 
