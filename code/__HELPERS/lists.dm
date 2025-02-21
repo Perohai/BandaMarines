@@ -11,7 +11,7 @@
  */
 
 //Returns a list in plain english as a string
-/proc/english_list(list/input, nothing_text = "nothing", and_text = " and ", comma_text = ", ", final_comma_text = "" )
+/proc/english_list(list/input, nothing_text = "ничего", and_text = " и ", comma_text = ", ", final_comma_text = "" )
 	var/total = length(input)
 	if (!total)
 		return "[nothing_text]"
@@ -148,8 +148,10 @@
 		var/i
 		while(length(L_o))
 			i = pick(L_o)
-			if(!ref) L_n += i
-			else L_n[i] = L_o[i]
+			if(!ref)
+				L_n += i
+			else
+				L_n[i] = L_o[i]
 			L_o -= i
 
 //Return a list with no duplicate entries

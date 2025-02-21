@@ -125,7 +125,8 @@ Implant Specifics:<BR>"}
 
 
 /obj/item/implant/dexplosive/activate(cause)
-	if((!cause) || (!src.imp_in)) return 0
+	if((!cause) || (!src.imp_in))
+		return 0
 	explosion(src, -1, 0, 2, 3, 0)//This might be a bit much, dono will have to see.
 	if(src.imp_in)
 		src.imp_in.gib()
@@ -300,7 +301,8 @@ the implant may become unstable and either pre-maturely inject the subject or si
 
 
 /obj/item/implant/chem/activate(cause)
-	if((!cause) || (!src.imp_in)) return 0
+	if((!cause) || (!src.imp_in))
+		return 0
 	var/mob/living/carbon/R = src.imp_in
 	src.reagents.trans_to(R, cause)
 	to_chat(R, "You hear a faint *beep*.")
@@ -345,8 +347,10 @@ the implant may become unstable and either pre-maturely inject the subject or si
 	return dat
 
 /obj/item/implant/loyalty/implanted(mob/M)
-	if(!ishuman(M)) return
-	if(isyautja(M)) return
+	if(!ishuman(M))
+		return
+	if(isyautja(M))
+		return
 	var/mob/living/carbon/human/H = M
 	to_chat(H, SPAN_NOTICE("You are now tagged as a WY loyalist and will be monitored by their central headquarters. You retain your free will and mental faculties."))
 	return 1
@@ -424,11 +428,11 @@ the implant may become unstable and either pre-maturely inject the subject or si
 		if ("emp")
 			var/obj/item/device/radio/headset/a = new /obj/item/device/radio/headset(null)
 			var/name = t.name
-			ai_silent_announcement("[mobname] has died in [name]!", "[mobname]'s Death Alarm")
+			ai_silent_announcement("Зафиксирована гибель [mobname] в [name]!", "Датчик смерти [mobname]")
 			qdel(a)
 		else
 			var/obj/item/device/radio/headset/a = new /obj/item/device/radio/headset(null)
-			ai_silent_announcement("[mobname] has died-zzzzt in-in-in...", "[mobname]'s Death Alarm")
+			ai_silent_announcement("Заф-ф-фиксирован-н-на гибель [mobname] в-в-в...", "Датчик смерти [mobname]")
 			qdel(a)
 			STOP_PROCESSING(SSobj, src)
 

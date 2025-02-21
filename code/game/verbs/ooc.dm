@@ -2,7 +2,8 @@
 	set name = "OOC" //Gave this shit a shorter name so you only have to time out "ooc" rather than "ooc message" to use it --NeoFite
 	set category = "OOC.OOC"
 
-	if(!mob) return
+	if(!mob)
+		return
 	if(IsGuestKey(key))
 		to_chat(src, "Guests may not use OOC.")
 		return
@@ -11,7 +12,8 @@
 		return
 
 	msg = trim(strip_html(msg))
-	if(!msg) return
+	if(!msg)
+		return
 
 	if(!(prefs.toggles_chat & CHAT_OOC))
 		to_chat(src, SPAN_DANGER("You have OOC muted."))
@@ -85,18 +87,22 @@
 		prefix += "[icon2html('icons/ooc.dmi', GLOB.clients, "Donator")]"
 	if(isCouncil(src))
 		prefix += "[icon2html('icons/ooc.dmi', GLOB.clients, "WhitelistCouncil")]"
+	var/comm_award = find_community_award_icons()
+	if(comm_award)
+		prefix += comm_award
 	if(admin_holder)
 		var/list/rank_icons = icon_states('icons/ooc.dmi')
 		var/rankname = admin_holder.rank
 		if(rankname in rank_icons)
 			prefix += "[icon2html('icons/ooc.dmi', GLOB.clients, admin_holder.rank)]"
-	if(admin_holder.extra_titles?.len)
-		var/list/extra_rank_icons = icon_states('icons/ooc.dmi')
-		var/ooc_icon_state
-		for(var/srank in admin_holder.extra_titles)
-			ooc_icon_state = trim(srank)
-			if(ooc_icon_state in extra_rank_icons)
-				prefix += "[icon2html('icons/ooc.dmi', GLOB.clients, ooc_icon_state)]"
+
+		if(length(admin_holder.extra_titles))
+			var/list/extra_rank_icons = icon_states('icons/ooc.dmi')
+			var/ooc_icon_state
+			for(var/srank in admin_holder.extra_titles)
+				ooc_icon_state = trim(srank)
+				if(ooc_icon_state in extra_rank_icons)
+					prefix += "[icon2html('icons/ooc.dmi', GLOB.clients, ooc_icon_state)]"
 	if(prefix)
 		prefix = "[prefix] "
 	return prefix
@@ -106,7 +112,8 @@
 	set desc = "Local OOC, seen only by those in view."
 	set category = "OOC.OOC"
 
-	if(!mob) return
+	if(!mob)
+		return
 	if(IsGuestKey(key))
 		to_chat(src, "Guests may not use LOOC.")
 		return
@@ -115,7 +122,8 @@
 		return
 
 	msg = trim(strip_html(msg))
-	if(!msg) return
+	if(!msg)
+		return
 
 	if(!(prefs.toggles_chat & CHAT_LOOC))
 		to_chat(src, SPAN_DANGER("You have LOOC muted."))
@@ -162,11 +170,11 @@
 			continue //they are handled after that
 
 		if(C.prefs.toggles_chat & CHAT_LOOC)
-			to_chat(C, "<font color='#f557b8'><span class='ooc linkify'><span class='prefix'>LOOC:</span> <EM>[display_name]:</EM> <span class='message'>[msg]</span></span></font>")
+			to_chat(C, "<font color='#6699cc'><span class='ooc linkify'><span class='prefix'>LOOC:</span> <EM>[display_name]:</EM> <span class='message'>[msg]</span></span></font>") // BANDAMARINES EDIT color #f557b8->#6699cc
 
 	if(mob.looc_overhead || GLOB.ooc_allowed)
 		var/transmit_language = isxeno(mob) ? LANGUAGE_XENOMORPH : LANGUAGE_ENGLISH
-		mob.langchat_speech(msg, heard, GLOB.all_languages[transmit_language], "#ff47d7")
+		mob.langchat_speech("LOOC: [msg]", heard, GLOB.all_languages[transmit_language], "#6699cc") // BANDAMARINES EDIT add LOOC: and color #f557b8->#6699cc
 
 	// Now handle admins
 	display_name = S.key
@@ -181,7 +189,7 @@
 			var/prefix = "(R)LOOC"
 			if (C.mob in heard)
 				prefix = "LOOC"
-			to_chat(C, "<font color='#f557b8'><span class='ooc linkify'><span class='prefix'>[prefix]:</span> <EM>[display_name]:</EM> <span class='message'>[msg]</span></span></font>")
+			to_chat(C, "<font color='#6699cc'><span class='ooc linkify'><span class='prefix'>[prefix]:</span> <EM>[display_name]:</EM> <span class='message'>[msg]</span></span></font>") // BANDAMARINES EDIT color #f557b8->#6699cc
 
 /client/verb/round_info()
 	set name = "Current Map" //Gave this shit a shorter name so you only have to time out "ooc" rather than "ooc message" to use it --NeoFite

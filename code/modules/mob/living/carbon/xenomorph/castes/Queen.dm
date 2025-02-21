@@ -22,7 +22,7 @@
 	is_intelligent = 1
 	evolution_allowed = FALSE
 	fire_immunity = FIRE_IMMUNITY_NO_DAMAGE|FIRE_IMMUNITY_NO_IGNITE
-	caste_desc = "The biggest and baddest xeno. The Queen controls the hive and plants eggs"
+	caste_desc = "The Queen, in all her glory."
 	spit_types = list(/datum/ammo/xeno/toxin/queen, /datum/ammo/xeno/acid/spatter)
 	can_hold_facehuggers = 0
 	can_hold_eggs = CAN_HOLD_ONE_HAND
@@ -203,7 +203,8 @@
 
 		to_chat(Q, message)
 		for(var/mob/living/carbon/xenomorph/X in viewers(7, src))
-			if(X == Q) continue
+			if(X == Q)
+				continue
 			to_chat(X, message)
 
 		var/obj/effect/overlay/temp/point/big/queen/point = new(T, src, A)
@@ -454,7 +455,7 @@
 /mob/living/carbon/xenomorph/queen/generate_name()
 	if(!nicknumber)
 		generate_and_set_nicknumber()
-	var/name_prefix = hive.prefix
+	var/name_prefix = hive.prefix_fem || hive.prefix
 	if(queen_aged)
 		age_xeno()
 		switch(age)
@@ -645,7 +646,7 @@
 	if(word_ability)
 		word_ability.apply_cooldown()
 
-	xeno_announcement(input, hivenumber, "The words of the [name] reverberate in our head...")
+	xeno_announcement(input, hivenumber, "Слова [declent_ru(GENITIVE)] раздаются эхом в нашей голове...")
 
 	message_admins("[key_name_admin(src)] has created a Word of the Queen report:")
 	log_admin("[key_name_admin(src)] Word of the Queen: [input]")

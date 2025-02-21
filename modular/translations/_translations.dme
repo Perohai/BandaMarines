@@ -4,12 +4,12 @@
 
 #include "code/button_tooltips.dm"
 #include "code/pronouns.dm"
+#include "code/ru_ammunition_desc.dm"
 #include "code/ru_weapon_desc.dm"
 #include "code/ru_names/ru_name_base.dm"
 #include "code/translate_dirs.dm"
 #include "code/translate_emotes.dm"
 #include "code/translate_verbs.dm"
-#include "code/ru_ammunition_desc.dm"
 
 // faction_rank translate
 #include "code/faction_rank/other/civilian.dm"
@@ -113,6 +113,7 @@
 
 // Xeno Abilities
 #include "code/xeno/castes_age.dm"
+#include "code/xeno/hive_status.dm"
 #include "code/xeno/xeno_abilities/general_abilities.dm"
 #include "code/xeno/xeno_abilities/xeno_action.dm"
 #include "code/xeno/xeno_abilities/xeno_projectiles.dm"

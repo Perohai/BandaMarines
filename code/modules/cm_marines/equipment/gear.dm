@@ -190,7 +190,7 @@
 
 /obj/item/reagent_container/food/snacks/protein_pack
 	name = "stale USCM protein bar"
-	desc = "The most fake-looking protein bar you have ever laid eyes on, covered in a substitution chocolate. The powder used to make these is a substitute of a substitute of whey substitute."
+	desc = "Наиболее фальшиво выглядящий покрытый шоколадом протеиновый батончик, который вы когда-либо видели. Порошок, использованный в батончике, является заменителем заменителя заменяющего молочную сыворотку."
 	icon_state = "yummers"
 	icon = 'icons/obj/items/food/mre_food.dmi'
 	filling_color = "#ED1169"
@@ -211,7 +211,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal1
 	name = "\improper USCM Prepared Meal (cornbread)"
-	desc = "A tray of standard USCM food. Stale cornbread, tomato paste and some green goop fill this tray."
+	desc = "Поднос стандартной еды ККМП. На подносе лежат черствый кукурузный хлеб, томатная паста и какая-то зелёная жижа."
 	icon_state = "MREa"
 	filling_color = "#ED1169"
 
@@ -222,7 +222,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal2
 	name = "\improper USCM Prepared Meal (pork)"
-	desc = "A tray of standard USCM food. Partially raw pork, goopy corn and some watery mashed potatoes fill this tray."
+	desc = "Поднос стандартной еды ККМП. На подносле лежат местами сырая свинина, склизкая кукуруза и водянистое картофельное пюре."
 	icon_state = "MREb"
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal2/Initialize()
@@ -232,7 +232,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal3
 	name = "\improper USCM Prepared Meal (pasta)"
-	desc = "A tray of standard USCM food. Overcooked spaghetti, waterlogged carrots and two french fries fill this tray."
+	desc = "Поднос стандартной еды ККМП. На подносе лежат подгоревшие спагетти, вялые морковки и две картошки фри."
 	icon_state = "MREc"
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal3/Initialize()
@@ -242,7 +242,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal4
 	name = "\improper USCM Prepared Meal (pizza)"
-	desc = "A tray of standard USCM food. Cold pizza, wet green beans and a shitty egg fill this tray. Get something other than pizza, lardass."
+	desc = "Поднос стандартной еды ККМП. На подносе лежат холодная пицца, мокрые зеленые бобы и дерьмовое яйцо. Бери что-то кроме пиццы, жиртрест."
 	icon_state = "MREd"
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal4/Initialize()
@@ -252,7 +252,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal5
 	name = "\improper USCM Prepared Meal (chicken)"
-	desc = "A tray of standard USCM food. Moist chicken, dry rice and a mildly depressed piece of broccoli fill this tray."
+	desc = "Поднос стандартной еды ККМП. На подносе лежат сырая курица, сухой рис и слегка подавленный кусок брокколи."
 	icon_state = "MREe"
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal5/Initialize()
@@ -262,7 +262,7 @@
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal6
 	name = "\improper USCM Prepared Meal (tofu)"
-	desc = "The USCM doesn't serve tofu you grass sucking hippie. The flag signifies your defeat."
+	desc = "ККМП не подаёт тофу, хипарь недоделанный. Флаг знаменует ваше поражение."
 	icon_state = "MREf"
 
 /obj/item/reagent_container/food/snacks/mre_pack/meal6/Initialize()
@@ -363,3 +363,54 @@
 			new /obj/item/reagent_container/food/snacks/cookie(src)
 		if(5)
 			new /obj/item/reagent_container/food/snacks/chocolatebar(src)
+
+/obj/item/device/overwatch_camera
+	name = "M5 Camera Gear"
+	desc = "A camera and associated headgear designed to allow marine commanders to see what their troops can see. A more robust version of this equipment is integrated into all standard USCM combat helmets."
+	icon = 'icons/obj/items/clothing/glasses/misc.dmi'
+	icon_state = "cam_gear_off"
+	item_icons = list(
+		WEAR_L_EAR = 'icons/mob/humans/onmob/clothing/ears.dmi',
+		WEAR_R_EAR = 'icons/mob/humans/onmob/clothing/ears.dmi',
+	)
+	item_state_slots = list(
+		WEAR_L_EAR = "cam_gear",
+		WEAR_R_EAR = "cam_gear",
+	)
+	flags_equip_slot = SLOT_EAR
+	var/obj/structure/machinery/camera/camera
+
+/obj/item/device/overwatch_camera/Initialize(mapload, ...)
+	. = ..()
+	camera = new /obj/structure/machinery/camera/overwatch(src)
+	AddComponent(/datum/component/overwatch_console_control)
+
+/obj/item/device/overwatch_camera/Destroy()
+	QDEL_NULL(camera)
+	return ..()
+
+/obj/item/device/overwatch_camera/equipped(mob/living/carbon/human/mob, slot)
+	if(camera)
+		camera.c_tag = mob.name
+		camera.status = TRUE
+		icon_state = "cam_gear_on"
+		update_icon()
+	..()
+
+/obj/item/device/overwatch_camera/unequipped(mob/user, slot)
+	. = ..()
+	if(camera)
+		camera.status = FALSE
+		icon_state = "cam_gear_off"
+		update_icon()
+
+/obj/item/device/overwatch_camera/dropped(mob/user)
+	if(camera)
+		camera.c_tag = "Unknown"
+	..()
+
+/obj/item/device/overwatch_camera/hear_talk(mob/living/sourcemob, message, verb, datum/language/language, italics)
+	SEND_SIGNAL(src, COMSIG_BROADCAST_HEAR_TALK, sourcemob, message, verb, language, italics, loc == sourcemob)
+
+/obj/item/device/overwatch_camera/see_emote(mob/living/sourcemob, emote, audible)
+	SEND_SIGNAL(src, COMSIG_BROADCAST_SEE_EMOTE, sourcemob, emote, audible, loc == sourcemob && audible)

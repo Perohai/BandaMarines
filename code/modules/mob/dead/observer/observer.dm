@@ -337,7 +337,8 @@
 	if(isobserver(usr) && usr.client && isliving(A))
 		var/mob/living/M = A
 		usr.client.cmd_admin_ghostchange(M, src)
-	else return ..()
+	else
+		return ..()
 
 
 /mob/dead/observer/Topic(href, href_list)
@@ -431,8 +432,10 @@ Works together with spawning an observer, noted above.
 
 /mob/dead/observer/Life(delta_time)
 	..()
-	if(!loc) return
-	if(!client) return 0
+	if(!loc)
+		return
+	if(!client)
+		return 0
 
 	return TRUE
 
@@ -542,7 +545,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		if(response == "Aghost")
 			client.admin_ghost()
 			return
-		if(response != "Ghost") return //didn't want to ghost after-all
+		if(response != "Ghost")
+			return //didn't want to ghost after-all
 		AdjustSleeping(2) // Sleep so you will be properly recognized as ghosted
 		var/turf/location = get_turf(src)
 		if(location) //to avoid runtime when a mob ends up in nullspace
@@ -570,26 +574,35 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 			ghost.can_reenter_corpse = FALSE
 			nest.ghost_of_buckled_mob = ghost
 
-/mob/dead/observer/Move(atom/newloc, direct)
+/mob/dead/observer/Move(atom/newloc, direct, glide_size_override = 32) // SS220 EDIT
 	following = null
 	var/area/last_area = get_area(loc)
 	if(updatedir)
 		setDir(direct)//only update dir if we actually need it, so overlays won't spin on base sprites that don't have directions of their own
 
+	if(glide_size_override)
+		set_glide_size(glide_size_override)
+
 	if(newloc)
 		abstract_move(newloc)
 	else
-		abstract_move(get_turf(src))  //Get out of closets and such as a ghost
-		if((direct & NORTH) && y < world.maxy)
-			y++
-		else if((direct & SOUTH) && y > 1)
-			y--
-		if((direct & EAST) && x < world.maxx)
-			x++
-		else if((direct & WEST) && x > 1)
-			x--
+		var/turf/destination = get_turf(src)
 
-	var/turf/new_turf = locate(x, y, z)
+		if((direct & NORTH) && y < world.maxy)
+			destination = get_step(destination, NORTH)
+
+		else if((direct & SOUTH) && y > 1)
+			destination = get_step(destination, SOUTH)
+
+		if((direct & EAST) && x < world.maxx)
+			destination = get_step(destination, EAST)
+
+		else if((direct & WEST) && x > 1)
+			destination = get_step(destination, WEST)
+
+		abstract_move(destination)
+
+	var/turf/new_turf = get_turf(src)
 	if(!new_turf)
 		return
 
@@ -653,6 +666,25 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 
 	forceMove(tree.entrance)
 
+/mob/dead/observer/verb/teleport_z_up()
+	set category = "Ghost.Movement"
+	set name = "Move Up"
+	set desc = "Move up a z level"
+
+	var/turf/above = SSmapping.get_turf_above(get_turf(src))
+
+	if(above)
+		usr.forceMove(above)
+
+/mob/dead/observer/verb/teleport_z_down()
+	set category = "Ghost.Movement"
+	set name = "Move Down"
+	set desc = "Move down a z level"
+
+	var/turf/below = SSmapping.get_turf_below(get_turf(src))
+
+	if(below)
+		usr.forceMove(below)
 
 /mob/dead/observer/verb/dead_teleport_area()
 	set category = "Ghost"
@@ -664,7 +696,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 
 	var/area/thearea = tgui_input_list(usr, "Area to jump to", "BOOYEA", return_sorted_areas())
-	if(!thearea) return
+	if(!thearea)
+		return
 
 	var/list/L = list()
 	for(var/turf/T in get_area_turfs(thearea.type))
@@ -807,7 +840,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	set name = "Analyze Air"
 	set category = "Ghost"
 
-	if(!istype(usr, /mob/dead/observer)) return
+	if(!istype(usr, /mob/dead/observer))
+		return
 
 	// Shamelessly copied from the Gas Analyzers
 	if (!( istype(loc, /turf) ))
@@ -928,6 +962,110 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 		return
 
 	GLOB.xeno_tacmap_status.tgui_interact(src)
+
+/mob/dead/observer/verb/view_faxes()
+	set name = "View Sent Faxes"
+	set desc = "View faxes from this round"
+	set category = "Ghost.View"
+
+	var/list/options = list(
+		"Weyland-Yutani", "High Command", "Provost", "Press",
+		"Colonial Marshal Bureau", "Union of Progressive Peoples",
+		"Three World Empire", "Colonial Liberation Front",
+		"Other", "Cancel")
+	var/answer = tgui_input_list(src, "Which kind of faxes would you like to see?", "Faxes", options)
+	switch(answer)
+		if("Weyland-Yutani")
+			var/body = "<body>"
+
+			for(var/text in GLOB.WYFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to Weyland-Yutani", "wyfaxviewer", "size=300x600")
+
+		if("High Command")
+			var/body = "<body>"
+
+			for(var/text in GLOB.USCMFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to High Command", "uscmfaxviewer", "size=300x600")
+
+		if("Provost")
+			var/body = "<body>"
+
+			for(var/text in GLOB.ProvostFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to the Provost Office", "provostfaxviewer", "size=300x600")
+
+		if("Press")
+			var/body = "<body>"
+
+			for(var/text in GLOB.PressFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to Press organizations", "pressfaxviewer", "size=300x600")
+
+		if("Colonial Marshal Bureau")
+			var/body = "<body>"
+
+			for(var/text in GLOB.CMBFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to the Colonial Marshal Bureau", "cmbfaxviewer", "size=300x600")
+
+		if("Union of Progressive Peoples")
+			var/body = "<body>"
+
+			for(var/text in GLOB.UPPFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to the Union of Progressive Peoples", "uppfaxviewer", "size=300x600")
+
+		if("Three World Empire")
+			var/body = "<body>"
+
+			for(var/text in GLOB.TWEFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to the Three World Empire", "twefaxviewer", "size=300x600")
+
+		if("Colonial Liberation Front")
+			var/body = "<body>"
+
+			for(var/text in GLOB.CLFFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Faxes to the Colonial Liberation Front", "clffaxviewer", "size=300x600")
+
+		if("Other")
+			var/body = "<body>"
+
+			for(var/text in GLOB.GeneralFaxes)
+				body += text
+				body += "<br><br>"
+
+			body += "<br><br></body>"
+			show_browser(src, body, "Inter-machine Faxes", "otherfaxviewer", "size=300x600")
+		if("Cancel")
+			return
 
 /mob/dead/verb/join_as_alien()
 	set category = "Ghost.Join"
@@ -1188,7 +1326,8 @@ This is the proc mobs get to turn into a ghost. Forked from ghostize due to comp
 	var/target = null
 
 	for(var/mob/living/M in mobs)
-		if(!istype(M,/mob/living/carbon/human) || M.stat || isyautja(M)) mobs -= M
+		if(!istype(M,/mob/living/carbon/human) || M.stat || isyautja(M))
+			mobs -= M
 
 
 	target = tgui_input_list(usr, "Please, select a contestant!", "Cake Time", mobs)

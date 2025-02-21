@@ -160,11 +160,13 @@
 
 /datum/game_mode/xenovs/pick_queen_spawn(mob/player, hivenumber = XENO_HIVE_NORMAL)
 	. = ..()
-	if(!.) return
+	if(!.)
+		return
 	// Spawn additional hive structures
 	var/turf/T  = .
 	var/area/AR = get_area(T)
-	if(!AR) return
+	if(!AR)
+		return
 	for(var/obj/effect/landmark/structure_spawner/xvx_hive/SS in AR)
 		SS.apply()
 		qdel(SS)
@@ -191,7 +193,7 @@
 
 			if(!sudden_death && world.time > round_time_sd)
 				sudden_death = TRUE
-				xeno_announcement("The hives have entered sudden death mode. No more respawns, no more Queens", "everything", HIGHER_FORCE_ANNOUNCE)
+				xeno_announcement("Ульи перешли в состояние скоропостижной гибели. Больше не будет ни перерождений, ни королев.", "everything", HIGHER_FORCE_ANNOUNCE)
 				for(var/obj/effect/alien/resin/special/pylon/core/C in hive_cores)
 					qdel(C)
 				hive_cores = list()
@@ -238,7 +240,7 @@
 			living_hives++
 			last_living_hive = H
 		else if (H in current_hives)
-			xeno_announcement("\The [H] has been eliminated from the world", "everything", HIGHER_FORCE_ANNOUNCE)
+			xeno_announcement("[H] был стёрт с лица земли.", "everything", HIGHER_FORCE_ANNOUNCE)
 			current_hives -= H
 
 
@@ -277,6 +279,7 @@
 	calculate_end_statistics()
 	declare_fun_facts()
 
+	GLOB.round_statistics?.save()
 
 	return TRUE
 

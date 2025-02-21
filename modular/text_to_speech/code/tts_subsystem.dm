@@ -126,7 +126,19 @@ SUBSYSTEM_DEF(tts220)
 		"ик" = "И Ка",
 		"sslr" = "Эс Эс Эл Эр",
 		"сслр" = "Эс Эс Эл Эр",
-		"бкп" = "Бэ Ка Пэ"
+		"бкп" = "Бэ Ка Пэ",
+		"рпг" = "Эр Пэ Гэ",
+		"сл" = "Эс Эл",
+		"лз" = "Эл Зэ",
+		"об" = "О Бэ",
+		"пг" = "Пэ Гэ",
+		"лв" = "Эл Вэ",
+		"мб" = "Эм Бэ",
+		"нв" = "Эн Вэ",
+		"кд" = "Кэ Дэ",
+		"фе" = "Эф Йе",
+		"мх" = "Эм Ха",
+		"мд" = "Эм Дэ"
 	)
 
 	var/static/list/tts_job_replacements = list(
@@ -266,9 +278,9 @@ SUBSYSTEM_DEF(tts220)
 	tts_seeds_names = sortTim(tts_seeds_names, /proc/cmp_text_asc)
 
 /datum/controller/subsystem/tts220/Initialize(start_timeofday)
-	is_enabled = SStts220.is_enabled
-	if(!is_enabled)
-		flags |= SS_NO_FIRE
+	if(!CONFIG_GET(flag/tts_enabled))
+		is_enabled = FALSE
+		return SS_INIT_NO_NEED
 	return SS_INIT_SUCCESS
 
 /datum/controller/subsystem/tts220/fire()

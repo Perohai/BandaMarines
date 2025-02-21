@@ -11,7 +11,7 @@
 	var/ert_dispatched = FALSE
 
 /datum/game_mode/proc/ares_online()
-	var/name = "ARES Онлайн"
+	var/name = "ARES: Онлайн"
 	var/input = "ARES. Онлайн. Доброе утро, морпехи."
 	shipwide_ai_announcement(input, name, 'sound/AI/ares_online.ogg')
 
@@ -88,8 +88,10 @@
 		return FALSE
 	for(var/S in total_calls)
 		var/datum/emergency_call/C= new S()
-		if(!C) continue
-		if(C.name == "name") continue //The default parent, don't add it
+		if(!C)
+			continue
+		if(C.name == "name")
+			continue //The default parent, don't add it
 		all_calls += C
 
 //Randomizes and chooses a call datum.

@@ -1,5 +1,5 @@
 #define SAVEFILE_VERSION_MIN 8
-#define SAVEFILE_VERSION_MAX 29
+#define SAVEFILE_VERSION_MAX 30
 
 //handles converting savefiles to new formats
 //MAKE SURE YOU KEEP THIS UP TO DATE!
@@ -192,11 +192,18 @@
 
 		S["hair_style_name"] << hair_style
 
+	if(savefile_version < 30)
+		var/be_special = 0
+		S["be_special"] >> be_special
+		be_special &= ~BE_KING
+		S["be_special"] << be_special
+
 	savefile_version = SAVEFILE_VERSION_MAX
 	return 1
 
 /datum/preferences/proc/load_path(ckey,filename="preferences.sav")
-	if(!ckey) return
+	if(!ckey)
+		return
 	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 	savefile_version = SAVEFILE_VERSION_MAX
 
@@ -220,10 +227,13 @@
 	return volume_preferences
 
 /datum/preferences/proc/load_preferences()
-	if(!path) return 0
-	if(!fexists(path)) return 0
+	if(!path)
+		return 0
+	if(!fexists(path))
+		return 0
 	var/savefile/S = new /savefile(path)
-	if(!S) return 0
+	if(!S)
+		return 0
 	S.cd = "/"
 
 	S["version"] >> savefile_version
@@ -570,12 +580,16 @@
 	return TRUE
 
 /datum/preferences/proc/load_character(slot)
-	if(!path) return 0
-	if(!fexists(path)) return 0
+	if(!path)
+		return 0
+	if(!fexists(path))
+		return 0
 	var/savefile/S = new /savefile(path)
-	if(!S) return 0
+	if(!S)
+		return 0
 	S.cd = "/"
-	if(!slot) slot = default_slot
+	if(!slot)
+		slot = default_slot
 	slot = sanitize_integer(slot, 1, MAX_SAVE_SLOTS, initial(default_slot))
 	if(slot != default_slot)
 		default_slot = slot
@@ -640,7 +654,6 @@
 	S["med_record"] >> med_record
 	S["sec_record"] >> sec_record
 	S["gen_record"] >> gen_record
-	S["be_special"] >> be_special
 	S["organ_data"] >> organ_data
 	S["gear"] >> gear
 	S["origin"] >> origin
@@ -661,10 +674,14 @@
 	metadata = sanitize_text(metadata, initial(metadata))
 	real_name = reject_bad_name(real_name)
 
-	if(isnull(language)) language = "None"
-	if(isnull(spawnpoint)) spawnpoint = "Arrivals Shuttle"
-	if(isnull(weyland_yutani_relation)) weyland_yutani_relation = initial(weyland_yutani_relation)
-	if(!real_name) real_name = random_name(gender)
+	if(isnull(language))
+		language = "None"
+	if(isnull(spawnpoint))
+		spawnpoint = "Arrivals Shuttle"
+	if(isnull(weyland_yutani_relation))
+		weyland_yutani_relation = initial(weyland_yutani_relation)
+	if(!real_name)
+		real_name = random_name(gender)
 	be_random_name = sanitize_integer(be_random_name, 0, 1, initial(be_random_name))
 	be_random_body = sanitize_integer(be_random_body, 0, 1, initial(be_random_body))
 	gender = sanitize_gender(gender)
@@ -723,10 +740,13 @@
 	trait_points = initial(trait_points)
 	close_browser(owner, "character_traits")
 
-	if(!origin) origin = ORIGIN_USCM
+	if(!origin)
+		origin = ORIGIN_USCM
 	if(!faction)  faction =  "None"
-	if(!religion) religion = RELIGION_AGNOSTICISM
-	if(!preferred_squad) preferred_squad = "None"
+	if(!religion)
+		religion = RELIGION_AGNOSTICISM
+	if(!preferred_squad)
+		preferred_squad = "None"
 
 	// =================================
 	// SS220 EDIT - TTS
@@ -737,9 +757,11 @@
 	return 1
 
 /datum/preferences/proc/save_character()
-	if(!path) return 0
+	if(!path)
+		return 0
 	var/savefile/S = new /savefile(path)
-	if(!S) return 0
+	if(!S)
+		return 0
 	S.cd = "/character[default_slot]"
 
 	//Character
@@ -798,7 +820,6 @@
 	S["med_record"] << med_record
 	S["sec_record"] << sec_record
 	S["gen_record"] << gen_record
-	S["be_special"] << be_special
 	S["organ_data"] << organ_data
 	S["gear"] << gear
 	S["origin"] << origin

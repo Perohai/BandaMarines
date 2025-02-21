@@ -27,7 +27,8 @@
 /obj/item/reagent_container/food/snacks/proc/On_Consume(mob/M)
 	SEND_SIGNAL(src, COMSIG_SNACK_EATEN, M)
 	SEND_SIGNAL(M, COMSIG_MOB_EATEN_SNACK, src)
-	if(!usr) return
+	if(!usr)
+		return
 
 	if(!reagents.total_volume)
 		if(M == usr)
@@ -103,7 +104,8 @@
 					SPAN_HELPFUL("[user] <b>starts feeding</b> you <b>[src]</b>."),
 					SPAN_NOTICE("[user] starts feeding [user == M ? "themselves" : "[M]"] [src]."))
 
-			if(!do_after(user, 30, INTERRUPT_ALL, BUSY_ICON_FRIENDLY, M)) return
+			if(!do_after(user, 30, INTERRUPT_ALL, BUSY_ICON_FRIENDLY, M))
+				return
 
 			var/rgt_list_text = get_reagent_list_text()
 
@@ -1566,7 +1568,8 @@
 	reagents.add_reagent("meatprotein",10)
 
 /obj/item/reagent_container/food/snacks/monkeycube/afterattack(obj/O, mob/user, proximity)
-	if(!proximity) return
+	if(!proximity)
+		return
 	if(istype(O,/obj/structure/sink) && !package)
 		to_chat(user, "You place \the [name] under a stream of water...")
 		user.drop_held_item()
@@ -3573,26 +3576,28 @@
 /obj/item/reagent_container/food/snacks/packaged_meal/proc/determinetype(newflavor)
 	name = "\improper MRE component ([newflavor])"
 	flavor = newflavor
+	var/ru_flavor = declent_ru_initial(newflavor, NOMINATIVE, newflavor) // BANDAMARINES EDIT
+	ru_names_rename(ru_names_toml("MRE component", suffix = " ([ru_flavor])", override_base = name))
 
 	switch(newflavor)
 		if("boneless pork ribs", "grilled chicken", "pizza square", "spaghetti chunks", "chicken tender")
 			icon_state = "entree"
-			desc = "An MRE entree component. Contains the main course for nutrients. This one is [flavor]."
+			desc = "Основное блюдо сухого пойка. Это [ru_flavor]."
 			reagents.add_reagent("nutriment", 14)
 			reagents.add_reagent("sodiumchloride", 6)
 		if("cracker", "cheese spread", "rice onigiri", "mashed potatoes", "risotto")
 			icon_state = "side"
-			desc = "An MRE side component. Contains a side, to be eaten alongside the main. This one is [flavor]."
+			desc = "Гарнит к основному блюду сухого пойка. Это [ru_flavor]."
 			reagents.add_reagent("nutriment", 6)
 			reagents.add_reagent("sodiumchloride", 2)
 		if("biscuit", "meatballs", "pretzels", "peanuts", "sushi")
 			icon_state = "snack"
-			desc = "An MRE snack component. Contains a light snack in case you weren't feeling terribly hungry. This one is [flavor]."
+			desc = "Компонент сухого пойка, рассчитанный на лёгкий перекус. Это [ru_flavor]."
 			reagents.add_reagent("nutriment", 4)
 			reagents.add_reagent("sodiumchloride", 2)
 		if("spiced apples", "chocolate brownie", "sugar cookie", "coco bar", "flan", "honey flan")
 			icon_state = "dessert"
-			desc = "An MRE side component. Contains a sweet dessert, to be eaten after the main (or before, if you're rebellious). This one is [flavor]."
+			desc = "Сладкий десерт, который можно съесть после основного блюда (или до него, если вы бунтарь). Это [ru_flavor]."
 			reagents.add_reagent("nutriment", 2)
 			reagents.add_reagent("sugar", 2)
 			reagents.add_reagent("coco", 1)
