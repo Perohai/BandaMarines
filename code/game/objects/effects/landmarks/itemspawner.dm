@@ -1,6 +1,3 @@
-/obj/effect/landmark/costume
-	icon_state = "costume"
-
 //Costume spawner landmarks
 /obj/effect/landmark/costume/random/Initialize() //costume spawner, selects a random subclass and disappears
 	. = ..()

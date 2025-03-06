@@ -80,8 +80,7 @@
 
 /obj/effect/landmark/ert_spawns/distress_twe
 	name = "Distress_TWE"
-	icon_state = "spawn_distress_twe"
 
 /obj/effect/landmark/ert_spawns/distress_twe/item
 	name = "Distress_TWEItem"
-	icon_state = "distress_item"
+

@@ -4,9 +4,6 @@
 /datum/action/xeno_action/onclick/xeno_resting
 	desc = "Отдых позволяет быстрее регенерировать здоровье."
 
-/datum/action/xeno_action/watch_xeno
-	desc = "Позволяет наблюдать за членом улья."
-
 /datum/action/xeno_action/onclick/shift_spits
 	desc = "Переключить вид плевка."
 
@@ -26,7 +23,6 @@
 	desc = "Поставить структуру, выбранную с помощью Choose Resin Structure."
 
 /datum/action/xeno_action/activable/info_marker
-	desc = "Позволяет поставить метку. Чтобы выбрать тип метки, нажмите на верхнюю иконку справа на HUD."
 
 /datum/action/xeno_action/activable/corrosive_acid
 	desc = "%POWER%, способная уничтожать источники света и окружение."
